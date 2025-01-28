@@ -39,7 +39,7 @@ def copy_image_to_subdirectory(image_asset: PIL.Image, subdirectory):
 # def change_config_file(config_filename, , visualization_intensity: int, num_frames: int)
 
 
-def create_cinemo_visualisation(prompt:str, image_asset: PIL.Image, visualization_intensity: int, num_frames: int):
+def create_cinemo_visualisation(prompt:str, image_asset: PIL.Image, visualization_intensity: int, num_frames: int) -> os.PathLike:
     cinemo_asses_dir = os.path.join(CINEMO_DIR, "animated_images")
     filename = copy_image_to_subdirectory(image_asset, cinemo_asses_dir)
     print(filename)
@@ -69,7 +69,7 @@ def remove_background(input_image: os.PathLike):
     # return remover.process(img, type='green')
 
 
-def perform_styleid_styletransfer(content_image: PIL.Image, style_image: PIL.Image):
+def perform_styleid_styletransfer(content_image: PIL.Image, style_image: PIL.Image) -> os.PathLike:
     style_id_content_dir = os.path.join(STYLEID_DIR, "data", "cnt")
     style_id_style_dir = os.path.join(STYLEID_DIR, "data", "sty")
 
