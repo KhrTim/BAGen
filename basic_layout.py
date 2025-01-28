@@ -208,7 +208,7 @@ with gr.Blocks() as demo:
             return (
                 params[style_transfer_image_path],
                 params[animation_video_path],
-                gr.Column(visible=True),
+                gr.Row(visible=True),
                 gr.Video(params[animation_video_path])
             )
 
@@ -222,8 +222,10 @@ with gr.Blocks() as demo:
                 return gr.Row(visible=False)
 
         def overlay_background_with_animation(params):
-            OVERLAY_VIDEO_SAVE_PATH=os.path.join("tmp","final.mp4")
-            os.makedirs("tmp", exist_ok=True)
+            path_to_file = os.path.join("media", "result")
+            OVERLAY_VIDEO_SAVE_PATH=os.path.join(path_to_file, "final.mp4")
+            if not os.path.exists(path_to_file):
+                os.makedirs(path_to_file, exist_ok=True)
 
 
             overlay_effect_video(params[animation_video_path], params[chosen_background], OVERLAY_VIDEO_SAVE_PATH, params[alpha])
@@ -258,11 +260,11 @@ with gr.Blocks() as demo:
             )
             create_button = gr.Button(value="Create")
 
-        with gr.Column(visible=False) as final_step:
+        with gr.Row(visible=False) as final_step:
             animation_effect_preview = gr.Video()
             with gr.Column():
                 alpha = gr.Slider(maximum=1, value=0.5, step=0.1, interactive=True)
-                final_animation = gr.Video()
+                final_animation = gr.Video(show_download_button=True)
                 alpha.change(
                     overlay_background_with_animation,
                     inputs={alpha, animation_video_path, chosen_background, final_video_path},
