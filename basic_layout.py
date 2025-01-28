@@ -2,6 +2,11 @@ import gradio as gr
 from song_generator import generate_songs
 from generate_backgrounds import generate_backgrounds
 from PIL import Image
+import os
+from utils.create_animation import create_cinemo_visualisation
+from utils.style_transfer import perform_styleid_styletransfer
+from utils.image_video_overlay_blend import overlay_effect_video
+
 
 def song_generator_stub(phrase, num_of_samples):
     results = [
@@ -94,7 +99,7 @@ def song_generator_stub(phrase, num_of_samples):
 
 
 def generate_backgrounds_stub(lyrics, num):
-    PATH_TO_IMAGE = "C:\\Users\\AutoML\\Documents\\LAB\\Automl_works\\Other_works\\children_song_paper\\app\\cat_img.webp"
+    PATH_TO_IMAGE = "media/cat_img.webp"
     images = []
     for i in range(num):
         images.append(Image.open(PATH_TO_IMAGE))
@@ -105,6 +110,8 @@ with gr.Blocks() as demo:
     contents_chosen = gr.State("")
     chosen_background = gr.State()
     style_transfer_image_path = gr.State()
+    animation_video_path = gr.State("")
+    final_video_path = gr.State("")
 
 
     with gr.Row():
@@ -148,9 +155,6 @@ with gr.Blocks() as demo:
                         outputs=contents_chosen,
                     )
 
-
-
-
     @gr.render(inputs=contents_chosen, triggers=[contents_chosen.change])
     def display_images(cont):
         backgrounds = generate_backgrounds_stub(cont, 3)
@@ -164,18 +168,49 @@ with gr.Blocks() as demo:
         with gr.Row(visible=True):
             for i in range(len(backgrounds)):
                 with gr.Column():
-                    image_sample = gr.Image(backgrounds[i])
+                    image_sample = gr.Image(backgrounds[i], type="pil")
                     select_button = gr.Button(value="Select")
                     select_button.click(
                         selected_lyrics,
                         inputs=[image_sample, chosen_background],
                         outputs=chosen_background,
                     )
-    
-
 
     @gr.render(triggers=[chosen_background.change])
-    def display_images():
+    def input_animation_options():
+        def create_animation(params):
+            print("=============================")
+            if params[style_transfer_image_path]:
+                print("Image exists")
+            else:
+                print("Image doesn't exits")
+                print("preset: ")
+                print(params[preset])
+                print("chosen_background")
+                print(params[chosen_background])
+                params[style_transfer_image_path] = perform_styleid_styletransfer(
+                    params[preset], params[chosen_background]
+                )
+                print("PATH")
+                print(params[style_transfer_image_path])
+
+            params[animation_video_path] = create_cinemo_visualisation(
+                params[prompt],
+                Image.open(params[style_transfer_image_path]),
+                params[intensity],
+                params[num_frames],
+            )
+
+            print(params[prompt])
+            print(params[animation_video_path])
+            print(params[style_transfer_image_path])
+
+            return (
+                params[style_transfer_image_path],
+                params[animation_video_path],
+                gr.Column(visible=True),
+                gr.Video(params[animation_video_path])
+            )
 
         def print_input(value):
             print(value)
@@ -185,21 +220,73 @@ with gr.Blocks() as demo:
                 return gr.Row(visible=True)
             elif option == 1:
                 return gr.Row(visible=False)
-        
+
+        def overlay_background_with_animation(params):
+            OVERLAY_VIDEO_SAVE_PATH=os.path.join("tmp","final.mp4")
+            os.makedirs("tmp", exist_ok=True)
 
 
-        effect_option = gr.Radio(["Generate effect from static image asset", "Overlay GIF"], label="Effect",type='index')
+            overlay_effect_video(params[animation_video_path], params[chosen_background], OVERLAY_VIDEO_SAVE_PATH, params[alpha])
+            params[final_video_path] = OVERLAY_VIDEO_SAVE_PATH
+            return params[final_video_path], gr.Video(params[final_video_path])
+            
+
+        effect_option = gr.Radio(
+            ["Generate effect from static image asset", "Overlay GIF"],
+            label="Effect",
+            type="index",
+        )
         preset = gr.Image(type="pil")
         preset.input(print_input, inputs=preset)
         with gr.Row(visible=False) as animation_behavior:
-            option = gr.Textbox(label="Description of a desired animation behavior")
-            intensity = gr.Slider(minimum=1, maximum=19, step=1, value=10, label="Animation intensity", interactive=True)
-            num_frames = gr.Slider(minimum=1, maximum=50, step=1, value=10, label="Number of animation steps", interactive=True)
+            prompt = gr.Textbox(label="Description of a desired animation behavior")
+            intensity = gr.Slider(
+                minimum=1,
+                maximum=19,
+                step=1,
+                value=10,
+                label="Animation intensity",
+                interactive=True,
+            )
+            num_frames = gr.Slider(
+                minimum=1,
+                maximum=50,
+                step=1,
+                value=10,
+                label="Number of animation steps",
+                interactive=True,
+            )
             create_button = gr.Button(value="Create")
 
+        with gr.Column(visible=False) as final_step:
+            animation_effect_preview = gr.Video()
+            with gr.Column():
+                alpha = gr.Slider(maximum=1, value=0.5, step=0.1, interactive=True)
+                final_animation = gr.Video()
+                alpha.change(
+                    overlay_background_with_animation,
+                    inputs={alpha, animation_video_path, chosen_background, final_video_path},
+                    outputs=[final_video_path, final_animation],
+                )
 
-        effect_option.input(manage_animation_behavior_input_row, inputs=effect_option, outputs=animation_behavior)
-
+        create_button.click(
+            create_animation,
+            inputs={
+                prompt,
+                intensity,
+                num_frames,
+                style_transfer_image_path,
+                preset,
+                chosen_background,
+                animation_video_path,
+            },
+            outputs=[style_transfer_image_path, animation_video_path, final_step, animation_effect_preview],
+        )
+        effect_option.input(
+            manage_animation_behavior_input_row,
+            inputs=effect_option,
+            outputs=animation_behavior,
+        )
 
 
 if __name__ == "__main__":
