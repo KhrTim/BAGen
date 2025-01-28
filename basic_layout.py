@@ -1,5 +1,5 @@
 import gradio as gr
-from song_generator import generate_songs
+from utils.song_generator import generate_songs
 from generate_backgrounds import generate_backgrounds
 from PIL import Image
 import os
