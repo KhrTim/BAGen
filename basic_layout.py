@@ -6,6 +6,7 @@ import os
 from utils.create_animation import create_cinemo_visualisation
 from utils.style_transfer import perform_styleid_styletransfer
 from utils.image_video_overlay_blend import overlay_effect_video
+from utils.image_gif_overlay import overlay_image_with_gif
 
 
 def song_generator_stub(phrase, num_of_samples):
@@ -209,17 +210,15 @@ with gr.Blocks() as demo:
                 params[style_transfer_image_path],
                 params[animation_video_path],
                 gr.Row(visible=True),
-                gr.Video(params[animation_video_path])
+                gr.Video(params[animation_video_path], visible=True)
             )
 
-        def print_input(value):
-            print(value)
 
         def manage_animation_behavior_input_row(option):
             if option == 0:
-                return gr.Row(visible=True)
+                return gr.Row(visible=True), gr.Video(), gr.Row(visible=False), gr.Row()
             elif option == 1:
-                return gr.Row(visible=False)
+                return gr.Row(visible=False), gr.Video(visible=False), gr.Row(visible=True), gr.Row(visible=False)
 
         def overlay_background_with_animation(params):
             path_to_file = os.path.join("media", "result")
@@ -233,13 +232,35 @@ with gr.Blocks() as demo:
             return params[final_video_path], gr.Video(params[final_video_path])
             
 
+        def overlay_background_with_gif(params):
+            path_to_file = os.path.join("media", "result")
+            OVERLAY_GIF_SAVE_PATH=os.path.join(path_to_file, "final.gif")
+            if not os.path.exists(path_to_file):
+                os.makedirs(path_to_file, exist_ok=True)
+
+            print("GIF CREATED")
+
+            # overlay_image_with_gif(background: PIL.Image.Image, gif: PIL.Image.Image, opacity: float, output_filename: os.PathLike):
+            overlay_image_with_gif(params[chosen_background], params[preset], params[gif_alpha], OVERLAY_GIF_SAVE_PATH)
+            # params[final_video_path] = OVERLAY_GIF_SAVE_PATH
+            # return params[final_video_path], gr.Video(params[final_video_path])
+
+            return OVERLAY_GIF_SAVE_PATH
+            
+
         effect_option = gr.Radio(
             ["Generate effect from static image asset", "Overlay GIF"],
             label="Effect",
             type="index",
         )
-        preset = gr.Image(type="pil")
-        preset.input(print_input, inputs=preset)
+
+        
+
+        
+        with gr.Row():
+            preset = gr.Image(type="pil", height=500)
+            animation_effect_preview = gr.Video(visible=False)
+
         with gr.Row(visible=False) as animation_behavior:
             prompt = gr.Textbox(label="Description of a desired animation behavior")
             intensity = gr.Slider(
@@ -259,17 +280,47 @@ with gr.Blocks() as demo:
                 interactive=True,
             )
             create_button = gr.Button(value="Create")
+        
+        
 
-        with gr.Row(visible=False) as final_step:
-            animation_effect_preview = gr.Video()
+        with gr.Row(visible=False) as gif_final_step:
+            with gr.Column():
+                gif_alpha = gr.Slider(maximum=1, value=0.5, step=0.1, minimum=0.2, interactive=True)
+                gif_final_animation = gr.Image(show_download_button=True, height=800)
+                gif_alpha.change(
+                    overlay_background_with_gif,
+                    inputs={gif_alpha, preset, chosen_background},
+                    outputs=gif_final_animation,
+                )
+
+        
+        with gr.Row(visible=False) as video_final_step:
+    
             with gr.Column():
                 alpha = gr.Slider(maximum=1, value=0.5, step=0.1, interactive=True)
-                final_animation = gr.Video(show_download_button=True)
+                final_animation = gr.Video(show_download_button=True, autoplay=True, height=800)
                 alpha.change(
                     overlay_background_with_animation,
                     inputs={alpha, animation_video_path, chosen_background, final_video_path},
                     outputs=[final_video_path, final_animation],
                 )
+
+        # def print_input(value):
+        #     print(value)
+        
+        
+        
+        # preset.input(print_input, inputs=preset, outputs=)
+
+
+
+        effect_option.input(
+            manage_animation_behavior_input_row,
+            inputs=effect_option,
+            outputs=[animation_behavior, animation_effect_preview, gif_final_step, video_final_step],
+        )
+
+
 
         create_button.click(
             create_animation,
@@ -282,12 +333,7 @@ with gr.Blocks() as demo:
                 chosen_background,
                 animation_video_path,
             },
-            outputs=[style_transfer_image_path, animation_video_path, final_step, animation_effect_preview],
-        )
-        effect_option.input(
-            manage_animation_behavior_input_row,
-            inputs=effect_option,
-            outputs=animation_behavior,
+            outputs=[style_transfer_image_path, animation_video_path, video_final_step, animation_effect_preview],
         )
 
 
