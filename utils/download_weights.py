@@ -3,7 +3,7 @@ import os
 import logging
 
 
-WEIGHTS_URL = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt"
+
 
 
 logging.basicConfig(
@@ -31,7 +31,8 @@ def download_weights_to_file(weights_url, filename):
 
 
 if __name__ == "__main__":
+    WEIGHTS_URL = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt"
     download_weights_to_file(
         WEIGHTS_URL,
-        "/userHome/userhome1/timur/NurseVRGen/submodules/StyleID/models/ldm/stable-diffusion-v1/model.ckpt",
+        "submodules/StyleID/models/ldm/stable-diffusion-v1/model.ckpt",
     )

@@ -107,8 +107,8 @@ def generate_backgrounds_stub(lyrics, num):
     return images
 
 
-with gr.Blocks() as demo:
-    gr.Markdown("# NurseVRGen: Gekjfwjekf")
+with gr.Blocks(theme=gr.themes.Soft()) as demo:
+    gr.Markdown("# NurseVRGen: Generative AI-based System for Visual Representation of Children's Songs")
     contents_chosen = gr.State("")
     chosen_background = gr.State()
     style_transfer_image_path = gr.State()
@@ -148,7 +148,7 @@ with gr.Blocks() as demo:
         with gr.Row():
             for i in range(num_of_samples):
                 with gr.Column():
-                    lyrics_sample = gr.Textbox(value=contents[i])
+                    lyrics_sample = gr.Textbox(value=contents[i], label=f"Result {i+1}")
                     select_button = gr.Button(value="Select")
                     select_button.click(
                         selected_lyrics,
@@ -166,10 +166,11 @@ with gr.Blocks() as demo:
             return sample
 
         print("Function call: ", cont)
+        gr.Markdown("# Generated Backgrounds")
         with gr.Row(visible=True):
             for i in range(len(backgrounds)):
                 with gr.Column():
-                    image_sample = gr.Image(backgrounds[i], type="pil")
+                    image_sample = gr.Image(backgrounds[i], type="pil", label=f"Result {i+1}")
                     select_button = gr.Button(value="Select")
                     select_button.click(
                         selected_lyrics,
@@ -180,20 +181,10 @@ with gr.Blocks() as demo:
     @gr.render(triggers=[chosen_background.change])
     def input_animation_options():
         def create_animation(params):
-            print("=============================")
-            if params[style_transfer_image_path]:
-                print("Image exists")
-            else:
-                print("Image doesn't exits")
-                print("preset: ")
-                print(params[preset])
-                print("chosen_background")
-                print(params[chosen_background])
+            if not params[style_transfer_image_path]:
                 params[style_transfer_image_path] = perform_styleid_styletransfer(
                     params[preset], params[chosen_background]
                 )
-                print("PATH")
-                print(params[style_transfer_image_path])
 
             params[animation_video_path] = create_cinemo_visualisation(
                 params[prompt],
@@ -201,10 +192,6 @@ with gr.Blocks() as demo:
                 params[intensity],
                 params[num_frames],
             )
-
-            print(params[prompt])
-            print(params[animation_video_path])
-            print(params[style_transfer_image_path])
 
             return (
                 params[style_transfer_image_path],
@@ -215,13 +202,13 @@ with gr.Blocks() as demo:
 
         def manage_animation_behavior_input_row(option):
             if option == 0:
-                return gr.Row(visible=True), gr.Video(), gr.Row(visible=False), gr.Row()
+                return gr.Row(visible=True), gr.Video(), gr.Column(visible=False), gr.Column()
             elif option == 1:
                 return (
                     gr.Row(visible=False),
                     gr.Video(visible=False),
-                    gr.Row(visible=True),
-                    gr.Row(visible=False),
+                    gr.Column(visible=True),
+                    gr.Column(visible=False),
                 )
 
         def overlay_background_with_animation(params):
@@ -245,29 +232,25 @@ with gr.Blocks() as demo:
             if not os.path.exists(path_to_file):
                 os.makedirs(path_to_file, exist_ok=True)
 
-            print("GIF CREATED")
-
-            # overlay_image_with_gif(background: PIL.Image.Image, gif: PIL.Image.Image, opacity: float, output_filename: os.PathLike):
             overlay_image_with_gif(
                 params[chosen_background],
                 params[preset],
                 params[gif_alpha],
                 OVERLAY_GIF_SAVE_PATH,
             )
-            # params[final_video_path] = OVERLAY_GIF_SAVE_PATH
-            # return params[final_video_path], gr.Video(params[final_video_path])
 
             return OVERLAY_GIF_SAVE_PATH
-
+        
+        gr.Markdown("# Effect generation")
         effect_option = gr.Radio(
             ["Generate effect from static image asset", "Overlay GIF"],
-            label="Effect",
+            label="Effect generation option",
             type="index",
         )
 
         with gr.Row():
-            preset = gr.Image(type="pil", height=500)
-            animation_effect_preview = gr.Video(visible=False)
+            preset = gr.Image(type="pil", height=500, label="Image or GIF asset")
+            animation_effect_preview = gr.Video(visible=False, label="Generated effect preview")
 
         with gr.Row(visible=False) as animation_behavior:
             prompt = gr.Textbox(label="Description of a desired animation behavior")
@@ -289,34 +272,35 @@ with gr.Blocks() as demo:
             )
             create_button = gr.Button(value="Create")
 
-        with gr.Row(visible=False) as gif_final_step:
-            with gr.Column():
-                gif_alpha = gr.Slider(
-                    maximum=1, value=0.5, step=0.1, minimum=0.2, interactive=True
-                )
-                gif_final_animation = gr.Image(show_download_button=True, height=800)
-                gif_alpha.change(
-                    overlay_background_with_gif,
-                    inputs={gif_alpha, preset, chosen_background},
-                    outputs=gif_final_animation,
-                )
+        
+        with gr.Column(visible=False) as gif_final_step:
+            gr.Markdown("# Final Result")
+            gif_alpha = gr.Slider(
+                maximum=1, value=0.5, step=0.1, minimum=0.2, interactive=True, label="Effect transparency"
+            )
+            gif_final_animation = gr.Image(show_download_button=True, height=800, label="Result preview")
+            gif_alpha.change(
+                overlay_background_with_gif,
+                inputs={gif_alpha, preset, chosen_background},
+                outputs=gif_final_animation,
+            )
 
-        with gr.Row(visible=False) as video_final_step:
-            with gr.Column():
-                alpha = gr.Slider(maximum=1, value=0.5, step=0.1, interactive=True)
-                final_animation = gr.Video(
-                    show_download_button=True, autoplay=True, height=800
-                )
-                alpha.change(
-                    overlay_background_with_animation,
-                    inputs={
-                        alpha,
-                        animation_video_path,
-                        chosen_background,
-                        final_video_path,
-                    },
-                    outputs=[final_video_path, final_animation],
-                )
+        with gr.Column(visible=False) as video_final_step:
+            gr.Markdown("# Final Result")
+            alpha = gr.Slider(maximum=1, value=0.5, step=0.1, interactive=True, label="Effect transparency")
+            final_animation = gr.Video(
+                show_download_button=True, autoplay=True, height=800, label="Result preview"
+            )
+            alpha.change(
+                overlay_background_with_animation,
+                inputs={
+                    alpha,
+                    animation_video_path,
+                    chosen_background,
+                    final_video_path,
+                },
+                outputs=[final_video_path, final_animation],
+            )
 
         # def print_input(value):
         #     print(value)
