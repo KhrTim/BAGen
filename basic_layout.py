@@ -127,7 +127,9 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
     )
     def display_generated_lyrics(phrase, num_of_samples):
         # contents = [f"Some phrase {i} {phrase}" for i in range(num_of_samples)]
-        raw_contents = song_generator_stub(phrase, num_of_samples)
+        # raw_contents = song_generator_stub(phrase, num_of_samples)
+        raw_contents = generate_songs(phrase, num_of_samples)
+
         print(raw_contents)
         contents = []
         for lyrics in raw_contents:
@@ -158,8 +160,8 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
     @gr.render(inputs=contents_chosen, triggers=[contents_chosen.change])
     def display_images(cont):
-        backgrounds = generate_backgrounds_stub(cont, 3)
-
+        # backgrounds = generate_backgrounds_stub(cont, 3)
+        backgrounds = generate_backgrounds(cont)
         def selected_lyrics(sample, contents_chosen):
             print(contents_chosen)
             print(sample)
