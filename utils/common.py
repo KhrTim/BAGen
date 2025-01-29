@@ -8,6 +8,7 @@ def delete_files_in_directory(directory_path):
         if os.path.isfile(file_path):
             os.remove(file_path)
 
+
 def get_list_of_files(directory_path):
     files = []
     for file in os.listdir(directory_path):
@@ -16,13 +17,14 @@ def get_list_of_files(directory_path):
             files.append(file_path)
     return files
 
+
 def cleanup(directories_to_cleanup: list[os.PathLike]):
     for directory in directories_to_cleanup:
         delete_files_in_directory(directory)
 
 
 def copy_image_to_subdirectory(image_asset: PIL.Image, subdirectory):
-    filename = os.path.join(subdirectory,"00.jpg")
+    filename = os.path.join(subdirectory, "00.jpg")
     print(filename)
     # image_asset.convert('RGB')
     image_asset.save(filename)

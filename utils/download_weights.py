@@ -6,7 +6,10 @@ import logging
 WEIGHTS_URL = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt"
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 def download_weights_to_file(weights_url, filename):
     try:
@@ -28,4 +31,7 @@ def download_weights_to_file(weights_url, filename):
 
 
 if __name__ == "__main__":
-    download_weights_to_file(WEIGHTS_URL, "/userHome/userhome1/timur/NurseVRGen/submodules/StyleID/models/ldm/stable-diffusion-v1/model.ckpt")
+    download_weights_to_file(
+        WEIGHTS_URL,
+        "/userHome/userhome1/timur/NurseVRGen/submodules/StyleID/models/ldm/stable-diffusion-v1/model.ckpt",
+    )

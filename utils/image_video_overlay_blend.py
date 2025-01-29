@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 
-def overlay_effect_video(video_path, background_image, output_path, alpha: float =0.5):
+
+def overlay_effect_video(video_path, background_image, output_path, alpha: float = 0.5):
     # Load the background image
     # background_image = cv2.imread(background_image_path)
     # background_image = cv2.imread(background_image_path)
@@ -27,7 +28,7 @@ def overlay_effect_video(video_path, background_image, output_path, alpha: float
         resize_frame = False
 
     # Define the codec and output video
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    fourcc = cv2.VideoWriter_fourcc(*"h264")
     out = cv2.VideoWriter(output_path, fourcc, fps, (background_w, background_h))
 
     while True:
@@ -50,6 +51,7 @@ def overlay_effect_video(video_path, background_image, output_path, alpha: float
     cv2.destroyAllWindows()
     print(f"Video saved at: {output_path}")
     return output_path
+
 
 # Example usage:
 # overlay_effect_video("stylized_raindrops.mp4", "11.jpg", "output_video_3.mp4")
