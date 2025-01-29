@@ -2,7 +2,7 @@ import os
 import subprocess
 import PIL
 from .common import copy_image_to_subdirectory, get_list_of_files
-from download_weights import download_weights_to_file
+from .download_weights import download_weights_to_file
 
 STYLEID_DIR = os.path.join("submodules", "StyleID")
 
