@@ -1,6 +1,6 @@
 import gradio as gr
 from utils.song_generator import generate_songs
-from generate_backgrounds import generate_backgrounds
+from utils.generate_backgrounds import generate_backgrounds
 from PIL import Image
 import os
 from utils.create_animation import create_cinemo_visualisation
@@ -108,6 +108,7 @@ def generate_backgrounds_stub(lyrics, num):
 
 
 with gr.Blocks() as demo:
+    gr.Markdown("# NurseVRGen: Gekjfwjekf")
     contents_chosen = gr.State("")
     chosen_background = gr.State()
     style_transfer_image_path = gr.State()
@@ -310,7 +311,9 @@ with gr.Blocks() as demo:
         
         
         
-        # preset.input(print_input, inputs=preset, outputs=)
+        preset.input(overlay_background_with_gif,
+                    inputs={gif_alpha, preset, chosen_background},
+                    outputs=gif_final_animation)
 
 
 
@@ -321,7 +324,11 @@ with gr.Blocks() as demo:
         )
 
 
-
+        create_button.click(
+                    overlay_background_with_animation,
+                    inputs={alpha, animation_video_path, chosen_background, final_video_path},
+                    outputs=[final_video_path, final_animation],
+                )
         create_button.click(
             create_animation,
             inputs={
