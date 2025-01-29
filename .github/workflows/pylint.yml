@@ -20,9 +20,9 @@ jobs:
         pip install pylint
         pip install ruff
 
-    - name: Formatting with ruff default rules
+    - name: Check formatting with ruff default rules
       run: |
-        ruff format $(git ls-files '*.py')
+        ruff format --check $(git ls-files '*.py')
     
     - name: Analysing the code with ruff
       run: |
