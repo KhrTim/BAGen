@@ -19,6 +19,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install ruff
+
+    - name: Formatting with ruff default rules
+      run: |
+        ruff format $(git ls-files '*.py')
     
     - name: Analysing the code with ruff
       run: |
