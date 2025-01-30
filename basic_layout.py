@@ -165,14 +165,15 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
         def selected_lyrics(sample, contents_chosen):
             print(contents_chosen)
             print(sample)
-            return sample
+            contents_chosen = sample
+            return contents_chosen
 
         print("Function call: ", cont)
         gr.Markdown("# Generated Backgrounds")
         with gr.Row(visible=True):
             for i in range(len(backgrounds)):
                 with gr.Column():
-                    image_sample = gr.Image(backgrounds[i], type="pil", label=f"Result {i+1}")
+                    image_sample = gr.Image(backgrounds[i], type="pil", label=f"Result {i+1}", show_download_button=True, interactive=False)
                     select_button = gr.Button(value="Select")
                     select_button.click(
                         selected_lyrics,

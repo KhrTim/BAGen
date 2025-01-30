@@ -25,7 +25,7 @@ def cleanup(directories_to_cleanup: list[os.PathLike]):
 
 def copy_image_to_subdirectory(image_asset: PIL.Image, subdirectory):
     filename = os.path.join(subdirectory, "00.jpg")
-    if not subdirectory.exits():
+    if not os.path.exists(subdirectory):
         print("Path doesn't exist. Creating...")
         os.makedirs(subdirectory)
     print(filename)

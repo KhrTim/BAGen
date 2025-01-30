@@ -153,6 +153,7 @@ dependencies:
       - markdown-it-py==3.0.0
       - mdurl==0.1.2
       - multidict==6.1.0
+      - numpy
       - numba==0.61.0
       - oauthlib==3.2.2
       - omegaconf==2.3.0
@@ -197,8 +198,7 @@ dependencies:
       - spaces==0.32.0
       - starlette==0.45.2
       - sympy==1.13.1
-      - taming-transformers==0.0.1
-      - taming-transformers-rom1504==0.0.6
+      - -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
       - tensorboard==2.18.0
       - tensorboard-data-server==0.7.2
       - tifffile==2025.1.10

@@ -11,8 +11,8 @@ def perform_styleid_styletransfer(
     content_image: PIL.Image.Image, style_image: PIL.Image.Image
 ) -> os.PathLike:
     WEIGHTS_URL = "https://huggingface.co/CompVis/stable-diffusion-v-1-4-original/resolve/main/sd-v1-4.ckpt"
-    weights_filename = os.join(STYLEID_DIR, "models", "ldm", "stable-diffusion-v1", "model.ckpt")
-    if not weights_filename.is_file():
+    weights_filename = os.path.join(STYLEID_DIR, "models", "ldm", "stable-diffusion-v1", "model.ckpt")
+    if not os.path.exists(weights_filename):
         print("weights haven't been found.")
         print(f"Loading weights to {weights_filename} ...")
         download_weights_to_file(WEIGHTS_URL, weights_filename)
