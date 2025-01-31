@@ -119,7 +119,7 @@ dependencies:
       - clip==0.2.0
       - coloredlogs==15.0.1
       - decord==0.6.0
-      - diffusers==0.32.2
+      - diffusers==0.24.0
       - easydict==1.13
       - einops==0.8.0
       - eval-type-backport==0.2.2
