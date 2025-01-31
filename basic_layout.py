@@ -108,7 +108,9 @@ def generate_backgrounds_stub(lyrics, num):
 
 
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
-    gr.Markdown("# NurseVRGen: Generative AI-based System for Visual Representation of Children's Songs")
+    gr.Markdown(
+        "# NurseVRGen: Generative AI-based System for Visual Representation of Children's Songs"
+    )
     contents_chosen = gr.State("")
     chosen_background = gr.State()
     style_transfer_image_path = gr.State()
@@ -150,7 +152,9 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
         with gr.Row():
             for i in range(num_of_samples):
                 with gr.Column():
-                    lyrics_sample = gr.Textbox(value=contents[i], label=f"Result {i+1}")
+                    lyrics_sample = gr.Textbox(
+                        value=contents[i], label=f"Result {i + 1}"
+                    )
                     select_button = gr.Button(value="Select")
                     select_button.click(
                         selected_lyrics,
@@ -162,6 +166,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
     def display_images(cont):
         # backgrounds = generate_backgrounds_stub(cont, 3)
         backgrounds = generate_backgrounds(cont)
+
         def selected_lyrics(sample, contents_chosen):
             print(contents_chosen)
             print(sample)
@@ -173,7 +178,13 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
         with gr.Row(visible=True):
             for i in range(len(backgrounds)):
                 with gr.Column():
-                    image_sample = gr.Image(backgrounds[i], type="pil", label=f"Result {i+1}", show_download_button=True, interactive=False)
+                    image_sample = gr.Image(
+                        backgrounds[i],
+                        type="pil",
+                        label=f"Result {i + 1}",
+                        show_download_button=True,
+                        interactive=False,
+                    )
                     select_button = gr.Button(value="Select")
                     select_button.click(
                         selected_lyrics,
@@ -205,7 +216,12 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
         def manage_animation_behavior_input_row(option):
             if option == 0:
-                return gr.Row(visible=True), gr.Video(), gr.Column(visible=False), gr.Column()
+                return (
+                    gr.Row(visible=True),
+                    gr.Video(),
+                    gr.Column(visible=False),
+                    gr.Column(),
+                )
             elif option == 1:
                 return (
                     gr.Row(visible=False),
@@ -244,7 +260,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
             )
 
             return OVERLAY_GIF_SAVE_PATH
-        
+
         gr.Markdown("# Effect generation")
         effect_option = gr.Radio(
             ["Generate effect from static image asset", "Overlay GIF"],
@@ -254,7 +270,9 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
         with gr.Row():
             preset = gr.Image(type="pil", height=500, label="Image or GIF asset")
-            animation_effect_preview = gr.Video(visible=False, label="Generated effect preview")
+            animation_effect_preview = gr.Video(
+                visible=False, label="Generated effect preview"
+            )
 
         with gr.Row(visible=False) as animation_behavior:
             prompt = gr.Textbox(label="Description of a desired animation behavior")
@@ -276,13 +294,19 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
             )
             create_button = gr.Button(value="Create")
 
-        
         with gr.Column(visible=False) as gif_final_step:
             gr.Markdown("# Final Result")
             gif_alpha = gr.Slider(
-                maximum=1, value=0.5, step=0.1, minimum=0.2, interactive=True, label="Effect transparency"
+                maximum=1,
+                value=0.5,
+                step=0.1,
+                minimum=0.2,
+                interactive=True,
+                label="Effect transparency",
             )
-            gif_final_animation = gr.Image(show_download_button=True, height=800, label="Result preview")
+            gif_final_animation = gr.Image(
+                show_download_button=True, height=800, label="Result preview"
+            )
             gif_alpha.change(
                 overlay_background_with_gif,
                 inputs={gif_alpha, preset, chosen_background},
@@ -291,9 +315,18 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
         with gr.Column(visible=False) as video_final_step:
             gr.Markdown("# Final Result")
-            alpha = gr.Slider(maximum=1, value=0.5, step=0.1, interactive=True, label="Effect transparency")
+            alpha = gr.Slider(
+                maximum=1,
+                value=0.5,
+                step=0.1,
+                interactive=True,
+                label="Effect transparency",
+            )
             final_animation = gr.Video(
-                show_download_button=True, autoplay=True, height=800, label="Result preview"
+                show_download_button=True,
+                autoplay=True,
+                height=800,
+                label="Result preview",
             )
             alpha.change(
                 overlay_background_with_animation,
