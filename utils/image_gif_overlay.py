@@ -29,7 +29,9 @@ def overlay_image_with_gif(
 
         background_copy.paste(frame, (0, 0), frame)
 
-        frames.append(background_copy.convert("RGB").convert("P", palette=Image.ADAPTIVE))
+        frames.append(
+            background_copy.convert("RGB").convert("P", palette=Image.ADAPTIVE)
+        )
 
     frames[0].save(
         output_filename,
