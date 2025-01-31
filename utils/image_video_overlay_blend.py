@@ -28,7 +28,7 @@ def overlay_effect_video(video_path, background_image, output_path, alpha: float
         resize_frame = False
 
     # Define the codec and output video
-    fourcc = cv2.VideoWriter_fourcc(*"h264")
+    fourcc = cv2.VideoWriter_fourcc(*"VP09")
     out = cv2.VideoWriter(output_path, fourcc, fps, (background_w, background_h))
 
     while True:

@@ -215,8 +215,9 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
                 )
 
         def overlay_background_with_animation(params):
+            print("overlay_background_with_animation")
             path_to_file = os.path.join("media", "result")
-            OVERLAY_VIDEO_SAVE_PATH = os.path.join(path_to_file, "final.mp4")
+            OVERLAY_VIDEO_SAVE_PATH = os.path.join(path_to_file, "final.webm")
             if not os.path.exists(path_to_file):
                 os.makedirs(path_to_file, exist_ok=True)
 
@@ -325,11 +326,11 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
             ],
         )
 
-        create_button.click(
-            overlay_background_with_animation,
-            inputs={alpha, animation_video_path, chosen_background, final_video_path},
-            outputs=[final_video_path, final_animation],
-        )
+        # create_button.click(
+        #     overlay_background_with_animation,
+        #     inputs={alpha, animation_video_path, chosen_background, final_video_path},
+        #     outputs=[final_video_path, final_animation],
+        # )
         create_button.click(
             create_animation,
             inputs={
