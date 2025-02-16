@@ -1,6 +1,6 @@
 [submodule "submodules/StyleID"]
 	path = submodules/StyleID
-	url = https://github.com/jiwoogit/StyleID.git
+	url = https://github.com/KhrTim/StyleID.git
 [submodule "submodules/Cinemo"]
 	path = submodules/Cinemo
-	url = https://github.com/maxin-cn/Cinemo.git
+	url = https://github.com/KhrTim/Cinemo.git
