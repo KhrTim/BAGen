@@ -3,6 +3,11 @@ import subprocess
 import PIL
 from .common import copy_image_to_subdirectory, get_list_of_files
 from .download_weights import download_weights_to_file
+import logging
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 STYLEID_DIR = os.path.join("submodules", "StyleID")
 
@@ -15,8 +20,8 @@ def perform_styleid_styletransfer(
         STYLEID_DIR, "models", "ldm", "stable-diffusion-v1", "model.ckpt"
     )
     if not os.path.exists(weights_filename):
-        print("weights haven't been found.")
-        print(f"Loading weights to {weights_filename} ...")
+        logging.info("weights haven't been found.")
+        logging.info(f"Loading weights to {weights_filename} ...")
         download_weights_to_file(WEIGHTS_URL, weights_filename)
 
     style_id_content_dir = os.path.join(STYLEID_DIR, "data", "cnt")
