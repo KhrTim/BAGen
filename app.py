@@ -1,15 +1,19 @@
 import gradio as gr
-from utils.llm_interaction import generate_songs, generate_animation_prompt
+from utils.llm_interaction import generate_songs, generate_animation_prompt, choose_effect_category
 from utils.generate_backgrounds import generate_backgrounds
 import os
 from utils.create_animation import create_cinemo_visualisation
 from utils.image_gif_overlay import overlay_image_with_gif
 import logging
+from utils.gif_picker import pick_random_file
 
+MEDIA_PATH = "media"
+GIF_ASSETS_PATH = os.path.join(MEDIA_PATH, "gif_assets")
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
 )
+
 
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown(
@@ -21,6 +25,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
     animation_video_path = gr.State("")
     final_video_path = gr.State("")
     effect_suggestion = ""
+    gif_effect_path = ""
 
     with gr.Row():
         initial_phrase = gr.Textbox(label="Initial phrase for lyrics generation")
@@ -45,11 +50,21 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
         logging.debug(contents)
 
+        #TODO: refactor. Too much for one function. Rename
         def choose_lyrics_and_prepare_prompt(lyrics_sample):
             global effect_suggestion
+            global gif_effect_path
+        
             effect_suggestion = generate_animation_prompt(lyrics_sample)
-            print("PROMPT SUGGESTION________")
-            print(effect_suggestion)
+            logging.debug("________PROMPT SUGGESTION________")
+            logging.debug(effect_suggestion)
+            effect_category = choose_effect_category(effect_suggestion)
+            logging.debug("________EFFECT CATEGORY________")
+            logging.debug(effect_category)
+            gif_effect_path = pick_random_file(os.path.join(GIF_ASSETS_PATH, effect_category))
+            logging.debug("________EFFECT PATH________")
+            logging.debug(gif_effect_path)
+
             return lyrics_sample
     
         with gr.Row():
@@ -152,7 +167,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
             type="index",
         )
 
-        preset = gr.Image(type="pil", height=500, label="Image or GIF asset", visible=False)
+        preset = gr.Image(type="pil", height=500, label="Image or GIF asset", visible=False, value=gif_effect_path)
 
         with gr.Row(visible=False) as animation_behavior:
             with gr.Column():

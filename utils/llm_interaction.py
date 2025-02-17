@@ -4,7 +4,7 @@ import logging
 import re
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -102,12 +102,12 @@ def generate_animation_prompt(lyrics):
     torch.cuda.empty_cache()
     output = tokenizer.decode(output[0], skip_special_tokens=True).split("\n")[-1]
 
-    logging.info(output)
+    logging.debug(output)
 
     match = re.search(r".*Prompt.*\s*\"([^\"]*)\"", output)
 
     if match:
-        logging.debug("Found")
+        logging.debug("Found PROMPT")
         extracted_text = match.group(1)
         logging.debug(f"PROMPT: {extracted_text}")
         return extracted_text
@@ -115,9 +115,62 @@ def generate_animation_prompt(lyrics):
     return output[0]
 
 
+def choose_effect_category(lyrics):
+    logging.info("CHOOSING ANIMATION CATEGORY")
+    model_name = "LGAI-EXAONE/EXAONE-3.5-2.4B-Instruct"
+
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        torch_dtype=torch.bfloat16,
+        trust_remote_code=True,
+        device_map="auto",
+    )
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are EXAONE model from LG AI Research, a helpful assistant.",
+        },
+        {
+            "role": "user",
+            "content": f"Choose one of the following categories that matches the prompt the most: 'rain', 'snow', 'flowers', 'leaves', 'fireworks'. Prompt: '{lyrics}' ",
+        },
+    ]
+
+    input_ids = tokenizer.apply_chat_template(
+        messages, tokenize=True, add_generation_prompt=False, return_tensors="pt"
+    )
+
+    output = model.generate(
+        input_ids.to("cuda"),
+        eos_token_id=tokenizer.eos_token_id,
+        max_new_tokens=128,
+        do_sample=False,
+    )
+
+    del model
+    torch.cuda.empty_cache()
+    output = tokenizer.decode(output[0], skip_special_tokens=True).split("\n")[-1]
+    
+    logging.debug(output)
+
+    match = re.search(r".*Category[\:\*]*\s*[\*\"\']*([a-z]*)[\*\"\']*", output)
+
+    if match:
+        logging.debug("Found CATEGORY")
+        extracted_text = match.group(1)
+        logging.debug(f"CATEGORY: {extracted_text}")
+        return extracted_text
+    logging.debug(f"CATEGORY: {output}")
+    return output[0]
+
 if __name__ == "__main__":
+    logging.debug("TESTING LLM INTERACTIONS")
     res = generate_animation_prompt("""Raindrops fall, soft and light,  
                                         Cat under rain, purring right.  
                                         Warm spots find comfort in sight,  
                                         Safe from storm, dreaming so bright.""")
+
+    res = choose_effect_category(res)
     logging.debug(res)
