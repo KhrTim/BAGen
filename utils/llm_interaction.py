@@ -4,7 +4,7 @@ import logging
 import re
 
 logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -83,7 +83,7 @@ def generate_animation_prompt(lyrics):
         },
         {
             "role": "user",
-            "content": f"Generate a one line prompt that can be passed to animation generation model based on the following lyrics to create the best interactive and immersive experience: '{lyrics}'.",
+            "content": f"Generate a one line prompt that can be passed to animation generation model based on the following lyrics to create the best interactive and immersive experience: '{lyrics}'. It should be formatted as 'Prompt:' and prompt in double quotes.",
         },
     ]
 
@@ -134,7 +134,7 @@ def choose_effect_category(lyrics):
         },
         {
             "role": "user",
-            "content": f"Choose one of the following categories that matches the prompt the most: 'rain', 'snow', 'flowers', 'leaves', 'fireworks'. Prompt: '{lyrics}' ",
+            "content": f"Choose one of the following categories that matches the prompt the most: 'rain', 'snow', 'flowers', 'leaves', 'fireworks' and write the output like 'Category:' and category. Prompt: '{lyrics}' ",
         },
     ]
 
