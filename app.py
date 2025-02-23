@@ -11,7 +11,7 @@ MEDIA_PATH = "media"
 GIF_ASSETS_PATH = os.path.join(MEDIA_PATH, "gif_assets")
 
 logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -119,7 +119,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
                 ANIMATION_SAVE_PATH
             )
 
-            print(params[animation_video_path])
+            logging.debug(params[animation_video_path])
 
             return (
                 params[animation_video_path],
