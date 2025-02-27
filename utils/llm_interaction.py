@@ -26,7 +26,7 @@ def generate_songs(key_phrase, num_songs):
         },
         {
             "role": "user",
-            "content": f"Generate a very short song for children containing following key-phrase: {key_phrase}.",
+            "content": f"Generate a very short song for children containing following key-phrase: {key_phrase}. Do not include any markdown and explanations for sections, output plain text.",
         },
     ]
     input_ids = tokenizer.apply_chat_template(
@@ -166,11 +166,14 @@ def choose_effect_category(lyrics):
     return output[0]
 
 if __name__ == "__main__":
-    logging.debug("TESTING LLM INTERACTIONS")
-    res = generate_animation_prompt("""Raindrops fall, soft and light,  
-                                        Cat under rain, purring right.  
-                                        Warm spots find comfort in sight,  
-                                        Safe from storm, dreaming so bright.""")
+    # logging.debug("TESTING LLM INTERACTIONS")
+    # res = generate_animation_prompt("""Raindrops fall, soft and light,  
+    #                                     Cat under rain, purring right.  
+    #                                     Warm spots find comfort in sight,  
+    #                                     Safe from storm, dreaming so bright.""")
 
-    res = choose_effect_category(res)
-    logging.debug(res)
+    # res = choose_effect_category(res)
+    # logging.debug(res)
+    res = generate_songs("cat under rain", 3)
+    for i in res:
+        print(i)
