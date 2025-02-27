@@ -8,6 +8,12 @@ from utils.create_animation import create_cinemo_visualisation
 from utils.image_gif_overlay import overlay_image_with_gif
 from utils.gif_picker import pick_random_file
 from PIL import Image
+from datetime import datetime
+
+def generate_filename(prefix="res", ext="gif"):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return f"{timestamp}.{ext}", f"{timestamp}.txt"
+
 
 MEDIA_PATH = "media"
 GIF_ASSETS_PATH = os.path.join(MEDIA_PATH, "gif_assets")
@@ -29,9 +35,9 @@ def prepare_prompt(lyrics_sample):
 
     return effect_suggestion, gif_effect_path
 
-def create_animation(prompt, background, intensity, num_animation_steps, video_len_frames):
+def create_animation(prompt, background, intensity, num_animation_steps, video_len_frames, filename):
     path_to_file = os.path.join("media", "result")
-    ANIMATION_SAVE_PATH = os.path.join(path_to_file, "final.webm")
+    ANIMATION_SAVE_PATH = os.path.join(path_to_file, filename)
     if not os.path.exists(path_to_file):
         os.makedirs(path_to_file, exist_ok=True)
     animation_video_path = create_cinemo_visualisation(
@@ -47,11 +53,11 @@ def create_animation(prompt, background, intensity, num_animation_steps, video_l
 
     return animation_video_path
 
-def overlay_background_with_gif(preset, background, gif_alpha):
+def overlay_background_with_gif(preset, background, gif_alpha, filename):
     if not preset:
         return  
     path_to_file = os.path.join("media", "result")
-    OVERLAY_GIF_SAVE_PATH = os.path.join(path_to_file, "final.gif")
+    OVERLAY_GIF_SAVE_PATH = os.path.join(path_to_file, filename)
     if not os.path.exists(path_to_file):
         os.makedirs(path_to_file, exist_ok=True)
 
@@ -81,10 +87,21 @@ def run_pipeline(prompt, mode):
     effect_suggestion, gif_effect_path = prepare_prompt(contents[0])
     background = generate_single_background(contents[0])
 
+
+    prompts_path = os.path.join("media", "prompts")
+    if not os.path.exists(prompts_path):
+        os.makedirs(prompts_path, exist_ok=True)
+
     if mode == "gif":
-        result = overlay_background_with_gif(gif_effect_path, background, 0.5)
+        res_filename, prompt_filename = generate_filename()
+        result = overlay_background_with_gif(gif_effect_path, background, 0.5, res_filename)
     else:
+        res_filename, prompt_filename = generate_filename(ext="webm")
         result = create_animation(effect_suggestion, background, 15, 10, 15)
+    
+    with open(os.join(prompts_path, prompt_filename), "w") as out:
+        out.write(contents[0])
+
 
     return result
     
