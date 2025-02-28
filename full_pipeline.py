@@ -99,7 +99,7 @@ def run_pipeline(prompt, mode):
         res_filename, prompt_filename = generate_filename(ext="webm")
         result = create_animation(effect_suggestion, background, 15, 10, 15)
     
-    with open(os.join(prompts_path, prompt_filename), "w") as out:
+    with open(os.path.join(prompts_path, prompt_filename), "w") as out:
         out.write(contents[0])
 
 
@@ -110,7 +110,7 @@ def run_pipeline(prompt, mode):
 def main():
     parser = argparse.ArgumentParser(description="Choose between 'gif' or 'direct animation'.")
     parser.add_argument("mode", choices=["gif", "direct"], help="Select the mode of operation.")
-    parser.add_argument("prompt", help="Input prompt for generation of ")
+    parser.add_argument("prompt", help="Initial phrase that defines content to be created.")
 
 
 
