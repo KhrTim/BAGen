@@ -16,7 +16,7 @@ To get started with this project, follow these steps:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [[your-repository-url]](https://github.com/KhrTim/BAGen.git)
+    git clone https://github.com/KhrTim/BAGen.git
     cd BAGen
     ```
 
