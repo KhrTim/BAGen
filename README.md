@@ -41,3 +41,15 @@ To launch the graphical user interface, simply run:
 
 ```bash
 python app.py
+```
+
+#### CLI Version
+
+The CLI offers more direct control and can be used for scripting. Here's how to use it:
+
+```bash
+# Example CLI Usage:
+python app.py gif "a serene landscape with a flowing river"
+python app.py direct "a futuristic city at sunset"
+
+```
