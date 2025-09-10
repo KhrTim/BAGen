@@ -39,13 +39,15 @@ To get started with this project, follow these steps:
 
 *Example output: Generated background animation for children's songs*
 
-#### Additional Examples
+#### GUI Workflow
 
-| GUI Interface | CLI Usage | Generated Output |
-|---------------|-----------|------------------|
-| ![GUI Screenshot](assets/demo/screenshot-2025-09-10_17-47-26.png) | ![CLI Screenshot](assets/demo/screenshot-2025-09-10_17-48-54.png) | ![Result](assets/demo/screenshot-2025-09-10_17-53-12.png) |
+The following screenshots show the step-by-step GUI workflow:
 
-[View full screencast demonstration](assets/demo/screencast.gif)
+| Step 1: Interface | Step 2: Input | Step 3: Processing | Step 4: Progress | Step 5: Result |
+|------------------|---------------|-------------------|------------------|----------------|
+| ![Start](assets/demo/screenshot-2025-09-10_17-47-26.png) | ![Input](assets/demo/screenshot-2025-09-10_17-48-54.png) | ![Processing](assets/demo/screenshot-2025-09-10_17-53-12.png) | ![Progress](assets/demo/screenshot-2025-09-10_17-53-51.png) | ![Complete](assets/demo/screenshot-2025-09-10_17-54-07.png) |
+
+**[📹 Watch the complete workflow in action](assets/demo/screencast.gif)**
 
 ---
 
