@@ -33,6 +33,22 @@ To get started with this project, follow these steps:
 
 ---
 
+### Demo
+
+![Demo GIF](assets/demo/final.gif)
+
+*Example output: Generated background animation for children's songs*
+
+#### Additional Examples
+
+| GUI Interface | CLI Usage | Generated Output |
+|---------------|-----------|------------------|
+| ![GUI Screenshot](assets/demo/screenshot-2025-09-10_17-47-26.png) | ![CLI Screenshot](assets/demo/screenshot-2025-09-10_17-48-54.png) | ![Result](assets/demo/screenshot-2025-09-10_17-53-12.png) |
+
+[View full screencast demonstration](assets/demo/screencast.gif)
+
+---
+
 ### Running the Application
 
 #### GUI Version
