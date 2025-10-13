@@ -67,7 +67,7 @@ The CLI offers more direct control and can be used for scripting. Here's how to 
 
 ```bash
 # Example CLI Usage:
-python app.py gif "a serene landscape with a flowing river"
-python app.py direct "a futuristic city at sunset"
+python full_pipeline.py gif "a serene landscape with a flowing river"
+python full_pipeline.py direct "a futuristic city at sunset"
 
 ```
