@@ -43,7 +43,7 @@ To get started with this project, follow these steps:
 
 The following screenshots show the step-by-step GUI workflow:
 
-| Step 1: Interface | Step 2: Input | Step 3: Processing | Step 4: Progress | Step 5: Result |
+| Step 1: Initial phrase | Step 2: Lyrics | Step 3: Background image | Step 4: Effect | Step 5: Result |
 |------------------|---------------|-------------------|------------------|----------------|
 | ![Start](assets/demo/screenshot-2025-09-10_17-47-26.png) | ![Input](assets/demo/screenshot-2025-09-10_17-48-54.png) | ![Processing](assets/demo/screenshot-2025-09-10_17-53-12.png) | ![Progress](assets/demo/screenshot-2025-09-10_17-53-51.png) | ![Complete](assets/demo/screenshot-2025-09-10_17-54-07.png) |
 
