@@ -1,4 +1,4 @@
-# BAGen: Background Animation Generation for LLM-Generated Lyric Towards Children's Songs
+# Automatic Background Animation Generation Aligned with LLM-Generated Lyrics for Children’s Songs
 This project offers a powerful tool for generating animated content, featuring both a graphical user interface (GUI) and a command-line interface (CLI). It leverages advanced models for background generation and animation, providing flexible and impressive results.
 
 ### Features
